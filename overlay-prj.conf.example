@@ -1,0 +1,6 @@
+#Example of product_uid, you must set you product uid.
+CONFIG_UPDATEHUB_PRODUCT_UID="a8981fc920599132d23c24a2b55963d72d619ebe546786ed5ab44ffd14306379"
+
+# CONFIG_UPDATEHUB_CE_SERVER=y
+# CONFIG_UPDATEHUB_SERVER="coap.staging.updatehub.io"
+
