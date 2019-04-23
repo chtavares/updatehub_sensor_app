@@ -61,30 +61,46 @@ be done in multiple ways, but the most common ones would be using make or ninja:
    # or
    ninja flash
 
-Step 3: Start the updatehub-ce-server
-=====================================
+Step 3: Start the updatehub-ce
+==============================
 
-By default, the updatehub application is set to start on the official server.
+By default, the updatehub application is set to start on the UpdateHub Cloud.
 For more details on how to use the official server please refer to the
 documentation on `updatehub.io`_.
-The official server has the option to use CoAPS/DTLS or not. By default the UpdateHub
-use DTLS, but this option can be disable if it is necessary on ``prj.conf``, just
-change :option:`CONFIG_UPDATEHUB_DTLS` to ``n`` and remove the minimal tls config.
+The UpdateHub Cloud has the option to use CoAPS/DTLS or not. If the user want
+to use the CoAPS/DTLS just need to add the ``overlay-dtls.conf`` at the build.
+You must use the certificate available just for test example. For you create a new certificates
+you can execute this following commands:
+
+.. code-block:: console
+
+    openssl genrsa -out privkey.pem 512
+
+    openssl req -new -x509 -key privkey.pem -out servercert.pem
+
+The cert and private key that is to be embedded into certificates.h in your application, can be generated like this:
+
+.. code-block:: console
+
+    openssl x509 -in servercert.pem -outform DER -out servercert.der
+
+    openssl pkcs8 -topk8 -inform PEM -outform DER -nocrypt -in privkey.pem \
+        -out privkey.der
 
 If you would like to use your own server, the steps below explain how
-updatehub works with updatehub-ce-server running, started by the
+updatehub works with updatehub-ce running, started by the
 following Docker command:
 
 .. code-block:: console
 
-    docker run -it -p 8080:8080 -p 5683:5683/udp --rm  updatehub/updatehub-ce-server:latest
+    docker run -it -p 8080:8080 -p 5683:5683/udp --rm  updatehub/updatehub-ce:latest
 
 Using this server the user need create own ``overaly-prj.conf`` setting the option
 :option:`CONFIG_UPDATEHUB_SERVER` with your local ip address and the option
-:option:`CONFIG_UPDATEHUB_CE_SERVER` with true. If the user will use polling mode on
+:option:`CONFIG_UPDATEHUB_CE` with true. If the user will use polling mode on
 UpdateHub need too set the option :option:`CONFIG_UPDATEHUB_POLL_INTERVAL` with the period of
 your preference, remembering that the limit is between 0 minute until 43200 minutes(30 days).
-And need set the :option:`CONFIG_UPDATEHUB_DTLS` to ``n`` and remove the minimal tls config.
+This server does not use DTLS, so you must not add ``overlay-dtls.config``.
 
 Step 4: Build Application
 =========================
@@ -192,7 +208,7 @@ And finally you can build the package by running:
 Step 9: Add the package to server
 ==================================
 
-Now, add the package to the updatehub-ce-server by, opening your browser to
+Now, add the package to the updatehub-ce by, opening your browser to
 the server URL, ``<your-ip-address>:8080``, and logging into the server using
 ``admin`` as the login and password by default.  After logging in, click on
 the package menu, then ``UPLOAD PACKAGE``, and select the package built in
