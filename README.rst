@@ -111,12 +111,13 @@ file you built in Step 3. In the below example, the MCUboot repo is located at
 .. code-block:: console
 
    ~/src/mcuboot/scripts/imgtool.py sign \
-        --key ~/src/mcuboot/root-rsa-2048.pem \
-        --header-size 0x200 \
-        --align 8 \
-        --version 1.0.0 \
-        --slot-size <image-slot-size> \
-        <path-to-zephyr.bin> signed-v1.bin
+	    --key ~/src/mcuboot/root-rsa-2048.pem \
+	    --align 8 \
+	    --version 1.0.0 \
+	    --header-size 0x200 \
+	    --slot-size <image-slot-size> \
+	    --pad \
+        <path-to-zephyr.bin> signed.bin
 
 The command above creates an image file called :file:`signed.(bin|hex)` in the
 current directory.
@@ -145,11 +146,12 @@ For the update to be correctly validated on the server, you must need sign the
 .. code-block:: console
 
    ~/src/mcuboot/scripts/imgtool.py sign \
-        --key ~/src/mcuboot/root-rsa-2048.pem \
-        --header-size 0x200 \
-        --align 8 \
-        --version 2.0.0 \
-        --slot-size <image-slot-size> \
+	    --key ~/src/mcuboot/root-rsa-2048.pem \
+	    --align 8 \
+	    --version 2.0.0 \
+	    --header-size 0x200 \
+	    --slot-size <image-slot-size> \
+	    --pad \
         <path-to-zephyr.bin> signed_v2.bin
 
 
@@ -239,7 +241,7 @@ used for debugging the board, type the following command:
 
 .. code-block:: console
 
-    kernel reboot cold
+    kernel reboot warn
 
 Your board will reboot and then start with the new image. After rebooting the
 board will automatically ping the server again and the message ``No update
